@@ -66,8 +66,8 @@
 <script type="text/javascript">
 
     function searchUser() {
-        // Declare variables
-        var input, filter, table, tr, td, td1, i;
+        
+        var input, filter, table, tr, td, i;
         input = document.getElementById("searchBar");
         filter = input.value.toUpperCase();
         table = document.getElementById("userTable");
@@ -77,7 +77,6 @@
         for (i = 0; i < tr.length; i++) {
             var done = false;
             for (j = 0; j < 7; j++) {
-                //td1 = tr[i].getElementsByTagName("td")[0];
                 td = tr[i].getElementsByTagName("td")[j];
 
                 if (!done && td) {
@@ -94,7 +93,6 @@
 
 
     $('[id^="save_"]').click(function () {
-        // do something
         var id = $(this).attr("id").substring(5);
         var postStr = id + "_";
         var select = document.getElementById("sele_" + id);

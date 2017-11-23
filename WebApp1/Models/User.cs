@@ -196,7 +196,7 @@ namespace WebApp1.Models
                         item.AccountType = AccountType.Manager;
                     }
 
-                    Debug.WriteLine(item.Email + ", " + item.Password + ", views: " + (item.Viewable != null ? String.Join("|", item.Viewable) : ""));
+                    Debug.WriteLine("Login: " + item.Email + ", " + item.Password);
                 }
                 db.SaveChanges();
             }
