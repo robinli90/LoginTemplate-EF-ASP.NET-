@@ -1,31 +1,115 @@
-﻿@{
+﻿@using System.Globalization
+@model WebApp1.Models.User
+@{
     ViewBag.Title = "Home Page";
 }
 
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
-</div>
+<html>
+    <body>
+        <div class="form-horizontal">
+            <div>
+                <h3>Your Profile:</h3>
+            </div>
+            <div>
+                <h3></h3>
+            </div>
+            <div class="form-group">
+                <img id="ItemPreview" src="@Model.GetImageString()" height="200" width="200"/>
+            </div>
+            <br/>
+            <div class="form-group">
+                <label class="col-xs-2">First Name:</label>
+                <p class="col-xs-2">@Model.FirstName</p>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-2">Last Name:</label>
+                <p class="col-xs-2">@Model.LastName</p>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-2">Email:</label>
+                <p class="col-xs-2">@Model.Email</p>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-2">Last Login:</label>
+                <p class="col-xs-2">@Model.LastLoginTime.ToString("MMM dd, yyyy", CultureInfo.InvariantCulture)</p>
+            </div>
+            <div class="form-group">
+                <button id="modifyProfile" class="btn btn-default">Modify Profile</button>
+            </div>
+            <div class="form-group">
+                <input type="file" name="attach" id="attach-input" multiple="" style="display: none" />
+                <button id="modifyImage" class="btn btn-default">Change Profile Image</button>
+            </div>
+        </div>
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-    </div>
-</div>
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/bootstrap")
+
+        <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+
+        <script type="text/javascript">
+
+            $('#modifyProfile').on('click', function (e) {
+                var url = '@Url.Action("Registration", "Account", new { paramOne = "modifyCurrent" })';
+                window.location.href = url;
+            });
+            
+            var input = $('#attach-input');
+
+            // when the file picker changes..
+            input.on('change', function (e) {
+                // turn it into a form
+                var data = BuildFormData(e.target.files);
+                // post the form to the action method
+                PostData(data);
+            });
+
+            $('#modifyImage').on('click', function (e) {
+                input.click();
+            });
+
+            // translates collection of files into a form
+            function BuildFormData(files) {
+                var data = new FormData();
+                for (var i = 0; i < files.length; i++) {
+                    data.append(files[i].name, files[i]);
+                }
+
+                return data;
+            }
+
+
+            // posts the files to a given url
+            function PostData(data) {
+                $.ajax({
+                    // method
+                    type: 'POST',
+
+                    // endpoint
+                    url: "/Account/UploadImage/",
+
+                    // next 2 lines required for using FormData with jQuery
+                    contentType: false,
+                    processData: false,
+
+                    // FormData instance
+                    data: data,
+
+                    // success handler
+                    success: function (result) {
+                        console.log(result);
+                        // Force browser reload
+                        location.reload();
+                    },
+
+                    error: function (result) {
+                        alert('Error uploading file for: ' + id);
+                        console.log(result);
+                    }
+                });
+            }
+
+        </script>
+
+    </body>
+</html>

@@ -1,0 +1,63 @@
+﻿@model WebApp1.Models.User
+@{
+    ViewBag.Title = "Log in";
+}
+
+<html>
+    <body>
+        <div>
+            <div>
+                <h3>Please login to access your profile</h3>
+            </div>
+            <br />
+            @using (@Html.BeginForm("CheckCredentials", "Account", FormMethod.Post, new { @class = "form-horizontal" }))
+            {
+            <!--retain the following information throughout the model-->
+                @Html.HiddenFor(m => m.LastLoginTime);
+                @Html.HiddenFor(m => m.LoginCount);
+                @Html.HiddenFor(m => m.Viewable);
+                @Html.HiddenFor(m => m.AccountType);
+                @Html.HiddenFor(m => m.Image);
+
+                <div class="form-group">
+                    <label class="col-xs-3 control-label">Email</label>
+                    <div class="col-xs-4">
+                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @placeholder = "Email Address" })
+                        @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-3 control-label">Login Password</label>
+                    <div class="col-xs-4">
+                        @Html.PasswordFor(m => m.Password, new { @class = "form-control", @placeholder = "Password", @value = "" })
+                        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div>
+                    <button type="submit" value="Submit" class="btn btn-default">Login</button>
+                </div>
+            }
+
+            <div>
+                <button id="registerButton" class="btn btn-default">Register</button>
+            </div>
+        </div>
+
+
+
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/bootstrap")
+
+        <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+        <script type="text/javascript">
+
+        // when the button is clicked..
+        $('#registerButton').on('click', function (e) {
+            var url = '@Url.Action("Registration", "Account", new { paramOne = "newUser" })';
+            window.location.href = url;
+        });
+
+
+        </script>
+    </body>
+</html>

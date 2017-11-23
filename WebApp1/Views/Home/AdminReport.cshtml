@@ -1,0 +1,23 @@
+﻿
+@using System.Globalization
+@using WebApp1.Models
+@model WebApp1.Models.User
+@{
+    ViewBag.Title = "AdminReport";
+}
+
+<h1></h1>
+<h1>Admin Report</h1>
+<h1></h1>
+<div class="form-horizontal">
+    <div class="form-group">
+        <label class="col-xs-2">Total Users</label>
+        <p class="col-xs-2">@WebApp1.Models.User.GetUsers(Model.Email).Count</p>
+    </div>
+    <div class="form-group">
+        <label class="col-xs-2">Total Login Count</label>
+        <p class="col-xs-2">@WebApp1.Models.User.GetUsers(Model.Email).Sum(x => x.LoginCount)</p>
+    </div>
+</div>
+
+

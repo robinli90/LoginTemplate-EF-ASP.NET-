@@ -1,0 +1,123 @@
+﻿@using System.Globalization
+@using WebApp1.Models
+
+@{
+    ViewBag.Title = "Users";
+}
+
+<h1></h1>
+<h1>Users</h1>
+<h1></h1>
+<div class="input-group">
+    <input type="text" id="searchBar" onkeyup="searchUser()" class="form-control" placeholder="Search for users">
+</div>
+<h1></h1>
+<div class="form-group">
+    <table class='table' id="userTable">
+        <thead>
+        <tr>
+            <th>Type</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Password</th>
+            <th>Last Login</th>
+            <th>Login Count</th>
+            <th>Viewables</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (User user in WebApp1.Models.User.GetUsers(Model.Email))
+        {
+            <tr>
+                <td>@user.AccountType</td>
+                <td>@user.FirstName</td>
+                <td>@user.LastName</td>
+                <td>@user.Email</td>
+                <td>@user.Password</td>
+                <td>@user.LastLoginTime.ToString("MMM dd, yyyy", CultureInfo.InvariantCulture)</td>
+                <td>@user.LoginCount</td>
+                @if (user.AccountType == AccountType.Manager)
+                {
+                    <td>
+                        <div>
+                            <select id="sele_@user.InternalId" multiple>
+                                @foreach (User viewableUser in WebApp1.Models.User.GetUsers(Model.Email))
+                                {
+                                    if (viewableUser.Email != user.Email)
+                                    {
+                                        <option @Html.Raw(user.Viewable != null && user.Viewable.Contains(viewableUser.InternalId.ToString()) ? " selected='selected' " : "") value="@viewableUser.InternalId">@viewableUser.Email</option>
+                                    }
+                                }
+                            </select></div>
+                        <div>
+                            <button id="save_@user.InternalId" class="btn btn-default">Save Viewable List</button></div>
+                    </td>
+                }
+                <td></td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+
+
+<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script type="text/javascript">
+
+    function searchUser() {
+        // Declare variables
+        var input, filter, table, tr, td, td1, i;
+        input = document.getElementById("searchBar");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("userTable");
+        tr = table.getElementsByTagName("tr");
+
+        // Loop through all table rows, and hide those who don't match the search query
+        for (i = 0; i < tr.length; i++) {
+            var done = false;
+            for (j = 0; j < 7; j++) {
+                //td1 = tr[i].getElementsByTagName("td")[0];
+                td = tr[i].getElementsByTagName("td")[j];
+
+                if (!done && td) {
+                    if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                        done = true;
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    }
+
+
+    $('[id^="save_"]').click(function () {
+        // do something
+        var id = $(this).attr("id").substring(5);
+        var postStr = id + "_";
+        var select = document.getElementById("sele_" + id);
+        for (var i = 0; i < select.options.length; i++) {
+            if (select.options[i].selected) {
+                postStr += select.options[i].value + "_";
+            }
+        }
+
+        postStr = postStr.substring(0, postStr.length - 1);
+
+        var targeturl = '@Url.Action("SaveViewables", "Account")?paramOne=' + postStr;
+
+        return $.ajax({
+            type: "POST",
+            url: targeturl,
+            dataPost: {paramOne : postStr},
+            datatype: "json",
+            success: function () {
+                alert('Saved viewable list!');
+            }
+        });
+    });
+
+</script>
+

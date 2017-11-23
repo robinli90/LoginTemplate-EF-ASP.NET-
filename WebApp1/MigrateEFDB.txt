@@ -1,0 +1,18 @@
+﻿1) First go to Server Explorer in Visual Studio, check if the ".mdf" Data Connections for this project are connected, if so, right click and delete.
+
+2 )Go to Solution Explorer, click show All Files icon.
+
+3) Go to App_Data, right click and delete all ".mdf" files for this project.
+
+4) Delete Migrations folder by right click and delete.
+
+5) Go to SQL Server Management Studio, make sure the DB for this project is not there, otherwise delete it.
+
+6) Go to Package Manager Console in Visual Studio and type:
+
+Enable-Migrations -Force
+Add-Migration init
+Update-Database
+7) Run your application
+
+Note: In step 6 part 3, if you 

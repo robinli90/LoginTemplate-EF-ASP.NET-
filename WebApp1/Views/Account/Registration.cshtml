@@ -1,0 +1,55 @@
+﻿@model WebApp1.Models.User
+@{
+    ViewBag.Title = "Registration";
+}
+
+
+<div>
+    <div>
+        <h3>@(Model != null && Model.Email != null ? "Modify login" : "Create a new login")</h3>
+    </div>
+    @using (@Html.BeginForm("UserChangeAdd", "Account", FormMethod.Post, new { @class = "form-horizontal" }))
+    {
+        <!--retain the following information throughout the model-->
+        @Html.HiddenFor(m => m.LastLoginTime);
+        @Html.HiddenFor(m => m.LoginCount);
+        @Html.HiddenFor(m => m.Viewable);
+        @Html.HiddenFor(m => m.AccountType);
+        @Html.HiddenFor(m => m.Image);
+
+        <div>
+            <div class="form-group">
+                <label class="col-xs-3 control-label">First Name</label>
+                <div class="col-xs-4">
+                    @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control", @placeholder = "Name", @value = Model.FirstName })
+                    @Html.ValidationMessageFor(m => m.FirstName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-3 control-label">Last Name</label>
+                <div class="col-xs-4">
+                    @Html.TextBoxFor(m => m.LastName, new { @class = "form-control", @placeholder = "Name", @value = Model.LastName })
+                    @Html.ValidationMessageFor(m => m.LastName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-3 control-label">Email</label>
+                <div class="col-xs-4">
+                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @placeholder = "Email", @value = Model.Email })
+                    @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-3 control-label">Login Password</label>
+                <div class="col-xs-4">
+                    @Html.PasswordFor(m => m.Password, new { @class = "form-control", @placeholder = "Login Password", @value = Model.Password })
+                    @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        <div>
+            <button type="submit" value="Submit" class="btn btn-default">@(Model != null && Model.Email != null ? "Save" : "Create User")</button>
+        </div>
+    }
+</div>
+
